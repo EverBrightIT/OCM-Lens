@@ -1,0 +1,34 @@
+# This showcase repository has no code to build. Its only pipeline turns a
+# pushed tag into a GitLab release, so the product home shows versions and
+# activity without duplicating the monorepo's CI.
+#
+# Flow: after a monorepo release (tag vX.Y.Z there), push the same tag here:
+#   git tag v0.16.0 && git push origin v0.16.0
+# The release notes link to the shared CHANGELOG; the vsix asset points at
+# the package built by the monorepo's own gitlab.com tag pipeline.
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+
+release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  script:
+    - |
+      cat > release-notes.md <<EOF
+      OCM Lens $CI_COMMIT_TAG, released in lockstep with SBOM Lens from the
+      [sbom-lens monorepo](https://gitlab.com/everbrightit-group/sbom-lens).
+      Full notes for this version are in the shared
+      [CHANGELOG](https://gitlab.com/everbrightit-group/sbom-lens/-/blob/main/CHANGELOG.md).
+
+      - Web app: <https://ocm-lens.everbright-it.de/app/>
+      - VS Code extension: <https://open-vsx.org/extension/everbright-it/ocmlens>
+      EOF
+  release:
+    tag_name: $CI_COMMIT_TAG
+    name: 'OCM Lens $CI_COMMIT_TAG'
+    description: release-notes.md
+    assets:
+      links:
+        - name: ocmlens.vsix
+          url: 'https://gitlab.com/api/v4/projects/everbrightit-group%2Fsbom-lens/packages/generic/ocmlens/$CI_COMMIT_TAG/ocmlens.vsix'
+          link_type: package
