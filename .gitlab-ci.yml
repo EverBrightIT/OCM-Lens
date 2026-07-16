@@ -10,6 +10,10 @@ workflow:
   rules:
     - if: $CI_COMMIT_TAG
 
+# No release: keyword here on purpose: the vsix asset link is only added
+# when the monorepo's gitlab.com tag pipeline has actually published the
+# package (best effort, same as the GitHub workflow), and that needs a
+# conditional release-cli call.
 release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   script:
@@ -23,12 +27,14 @@ release:
       - Web app: <https://ocm-lens.everbright-it.de/app/>
       - VS Code extension: <https://open-vsx.org/extension/everbright-it/ocmlens>
       EOF
-  release:
-    tag_name: $CI_COMMIT_TAG
-    name: 'OCM Lens $CI_COMMIT_TAG'
-    description: release-notes.md
-    assets:
-      links:
-        - name: ocmlens.vsix
-          url: 'https://gitlab.com/api/v4/projects/everbrightit-group%2Fsbom-lens/packages/generic/ocmlens/$CI_COMMIT_TAG/ocmlens.vsix'
-          link_type: package
+    - |
+      url="https://gitlab.com/api/v4/projects/everbrightit-group%2Fsbom-lens/packages/generic/ocmlens/$CI_COMMIT_TAG/ocmlens.vsix"
+      if wget -q --spider "$url" 2>/dev/null; then
+        release-cli create --tag-name "$CI_COMMIT_TAG" --name "OCM Lens $CI_COMMIT_TAG" \
+          --description "$(cat release-notes.md)" \
+          --assets-link "{\"name\":\"ocmlens.vsix\",\"url\":\"$url\",\"link_type\":\"package\"}"
+      else
+        echo "vsix not published on gitlab.com for $CI_COMMIT_TAG; creating the release without the asset link"
+        release-cli create --tag-name "$CI_COMMIT_TAG" --name "OCM Lens $CI_COMMIT_TAG" \
+          --description "$(cat release-notes.md)"
+      fi
