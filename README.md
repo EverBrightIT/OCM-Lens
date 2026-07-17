@@ -45,6 +45,12 @@ The VS Code extension is on
 - **Embedded SBOMs join the tree.** SPDX SBOMs shipped inside a delivery are
   extracted, linked to their resources, and resolved into the same cascade,
   so a release, its components, and their SBOMs read as one structure.
+- **Registry browsing (VS Code).** Pull a component version straight from an
+  OCI registry and browse it like a local delivery, SBOMs, digest verdicts,
+  and signatures included. Unresolved component references offer a
+  fetch-from-registry button prefilled from the descriptor's repository
+  contexts; private registries take a per-host token kept in VS Code secret
+  storage. Pull-only, like everything else here.
 - **Analysis included.** Cross-delivery inventory, version conflicts, and a
   release-to-release diff that also sees content changes (same version,
   different digest). Quality reports run on declarative compliance profiles,
@@ -56,7 +62,8 @@ The VS Code extension is on
 - **VS Code / VSCodium:** install
   [`everbright-it.ocmlens`](https://open-vsx.org/extension/everbright-it/ocmlens)
   from Open VSX. It opens `component-descriptor.yaml` files and `.ctf` /
-  component-archive tars, and can scan the workspace for deliveries.
+  component-archive tars, scans the workspace for deliveries, and pulls
+  component versions straight from OCI registries.
 
 ## Where the code lives
 
