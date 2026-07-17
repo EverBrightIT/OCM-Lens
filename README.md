@@ -80,8 +80,10 @@ Read-only by design: OCM Lens views and verifies deliveries, it does not
 create, sign, or transport them. Signature verification covers RSASSA-PSS and
 PKCS1-v1_5 with SHA-256/512; certificate chains, timestamping, and
 `jsonNormalisation/v1` are out of scope and reported as unverifiable rather
-than guessed. Archives are capped (10,000 entries, 512 MB decompressed) and
-previews truncated. The full list, stated plainly, lives in
+than guessed. Plain `.tar` deliveries stream from disk, so multi-GB release
+bundles open; blobs over 64 MB are indexed without a content preview (their
+digest verdict still runs), compressed `.tgz` is capped at 2 GiB
+decompressed. The full list, stated plainly, lives in
 [docs/ocm.md](https://gitlab.com/everbrightit-group/sbom-lens/-/blob/main/docs/ocm.md).
 
 ## Security
