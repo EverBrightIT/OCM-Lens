@@ -1,3 +1,5 @@
+![OCM Lens: a fast, minimal viewer for OCM deliveries](docs/banner.png)
+
 [![Open VSX](https://img.shields.io/open-vsx/v/everbright-it/ocmlens?label=Open%20VSX)](https://open-vsx.org/extension/everbright-it/ocmlens)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
